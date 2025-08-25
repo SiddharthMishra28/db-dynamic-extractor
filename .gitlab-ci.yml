@@ -1,20 +1,25 @@
-image: alpine:latest
+default:
+  image: maven:3.8.5-openjdk-11
 
 variables:
-  PROJECT_ID: "123456"                # set in GitLab CI/CD Variables
-  BRANCH_NAME: "main"                 # set in GitLab CI/CD Variables
-  TRIGGER_TOKEN: $PIPELINE_TRIGGER_TOKEN  # GitLab CI/CD Variable (protected)
+  DB_HOSTNAME: "your_db_hostname"
+  DB_NAME: "your_db_name"
+  DB_USER: "your_db_user"
+  DB_PASSWORD: "your_db_password"
+  QUERIES: "artifact1=SELECT 1,artifact2=SELECT 2"
 
-pages:
-  stage: deploy
+stages:
+  - build_and_run
+
+build_and_run_job:
+  stage: build_and_run
   script:
-    - apk add --no-cache sed
-    # Replace placeholders with actual variables
-    - sed -i "s#__PROJECT_ID__#${PROJECT_ID}#g" public/app.js
-    - sed -i "s#__BRANCH_NAME__#${BRANCH_NAME}#g" public/app.js
-    - sed -i "s#__TRIGGER_TOKEN__#${TRIGGER_TOKEN}#g" public/app.js
+    - echo "Building the project..."
+    - mvn clean install
+    - echo "Running the CSV exporter..."
+    - java -cp target/csv-exporter-1.0-SNAPSHOT.jar com.gitlab.pipeline.CsvExporter
+    - echo "Script finished."
   artifacts:
     paths:
-      - public
-  only:
-    - main
+      - target/*.csv
+    when: on_success
