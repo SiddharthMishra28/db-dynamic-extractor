@@ -194,6 +194,17 @@ textarea:focus {
     text-decoration: underline;
 }
 
+.site-footer {
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--border-color);
+    font-size: 0.9rem;
+}
+
+.site-footer p {
+    display: inline-block;
+}
+
 @media (max-width: 600px) {
     body {
         padding: 1rem;
