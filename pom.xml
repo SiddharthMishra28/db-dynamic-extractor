@@ -31,6 +31,7 @@
 
     <build>
         <plugins>
+            <!-- Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -40,6 +41,8 @@
                     <target>11</target>
                 </configuration>
             </plugin>
+
+            <!-- JAR Plugin (thin jar, no dependencies included) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -52,26 +55,16 @@
                     </archive>
                 </configuration>
             </plugin>
+
+            <!-- Exec Plugin to run the main method with classpath deps -->
             <plugin>
-             <groupId>org.apache.maven.plugins</groupId>
-             <artifactId>maven-shade-plugin</artifactId>
-             <version>3.4.1</version>
-             <executions>
-                 <execution>
-                     <phase>package</phase>
-                     <goals>
-                         <goal>shade</goal>
-                     </goals>
-                     <configuration>
-                         <transformers>
-                             <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                 <mainClass>com.gitlab.pipeline.CsvExporter</mainClass>
-                             </transformer>
-                         </transformers>
-                     </configuration>
-                 </execution>
-             </executions>
-         </plugin>     
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.gitlab.pipeline.CsvExporter</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
